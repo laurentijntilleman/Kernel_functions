@@ -40,7 +40,7 @@ def generate_smoothing_Gram(n_instances, alpha):
             alpha * np.eye(n_instances)
 
 
-def generate_smoothing_hat(n_instances, alpha, reg=1.0):
+def generate_smoothing_hat(n_instances, alpha, reg):
     '''
     Generates the hat matrix of a smoothing matrix.
     Inputs:
@@ -54,7 +54,7 @@ def generate_smoothing_hat(n_instances, alpha, reg=1.0):
             ones_weight(n_instances, alpha, reg) * np.ones((n_instances, n_instances))
 
 
-def generate_smoothing_leverages(n_instances, alpha, reg=1.0):
+def generate_smoothing_leverages(n_instances, alpha, reg):
     '''
     Generates the leverages of a smoothing matrix. Usefull for LOOCV
     Inputs:
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     gram = generate_smoothing_Gram(n_instances, alpha)
     print gram
 
-    hat = generate_smoothing_hat(n_instances, alpha)
+    hat = generate_smoothing_hat(n_instances, alpha, reg)
     print hat
 
     print np.mean((hat - np.linalg.inv(gram + np.eye(n_instances) * reg).dot(gram))**2)
