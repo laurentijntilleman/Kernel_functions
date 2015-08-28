@@ -25,7 +25,7 @@ import numpy as np
 diag_weight = lambda N, a, l : a / (a + l)
 
 # ones weight hat matrix
-ones_weight = lambda N, a, l : l * (a -1) / (a + l) / (N * (a - 1) - a - l)
+ones_weight = lambda N, a, l : l * (a - 1) / (a + l) / (N * (a - 1) - a - l)
 
 def generate_smoothing_Gram(n_instances, alpha):
     '''
@@ -68,8 +68,8 @@ def generate_smoothing_leverages(n_instances, alpha, reg=1.0):
             ones_weight(n_instances, alpha, reg)) * np.ones(n_instances)
 
 if __name__ == '__main__':
-    n_instances = 10
-    alpha = 0.3
+    n_instances = 100
+    alpha = 0.5
     reg = 2.0
 
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     hat = generate_smoothing_hat(n_instances, alpha)
     print hat
 
-    print np.allclose(hat, np.linalg.inv(gram + np.eye(n_instances) * reg).dot(gram))
+    print np.mean((hat - np.linalg.inv(gram + np.eye(n_instances) * reg).dot(gram))**2)
