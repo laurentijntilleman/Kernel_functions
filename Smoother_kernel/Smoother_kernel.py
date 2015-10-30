@@ -56,8 +56,9 @@ def smooth_predictions(Y, alpha, reg):
     '''
     Smooths the predictions using the hat matrix of a smoothing kernel
     '''
-    diag = diag_weight(n_instances, alpha, reg)
-    ones = ones_weight(n_instances, alpha, reg)
+    n_instances, n_tasks = Y.shape
+    diag = diag_weight(n_tasks, alpha, reg)
+    ones = ones_weight(n_tasks, alpha, reg)
     return Y * diag + np.sum(Y, axis=1, keepdims=True) * ones
 
 def generate_smoothing_leverages(n_instances, alpha, reg):
