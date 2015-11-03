@@ -100,7 +100,7 @@ def gap_weighted_subsequence_Gram(sequences, ss_length, gap_weight,
                     sequences (str or list of char)
         - char_weights : optionally give weights of char-char similarity (dict)
         - full : return also result for lower length substrings at low 
-                    computational cost (currently not supported)
+                    computational cost
     
     Ouputs: either the kernel value or an array of kernel values for different
             lengths
