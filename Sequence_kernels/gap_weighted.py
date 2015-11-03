@@ -54,7 +54,7 @@ def gap_weighted_subsequence(sequence1, sequence2, ss_length, gap_weight,
     """
     # initialize the alphabet
     if alphabet is None:
-        alphabet = list(set(sequence1) + set(sequence2))
+        alphabet = list(set(sequence1) | set(sequence2))
     alphabet_dict = {char : i for i, char in enumerate(alphabet)}
     
     # sequences to integers
@@ -83,10 +83,9 @@ if __name__ == '__main__':
     #string1 = np.array(list('logaritm'))
     #string2 = np.array(list('algorithm'))
     
-    string1 = np.random.randint(0, 100, size=100)
-    string2 = np.random.randint(0, 100, size=123)
+    string1 = 'gatta'
+    string2 = 'cata'
+
     
-    l1 = len(string1)
-    l2 = len(string2)
-    
-    print dyn_gap_weighted_subseq(string1, string2, np.zeros((l1, l2)),np.zeros((l1+1, l2+1)), np.zeros(5),5, 0.6)
+    print gap_weighted_subsequence(string1, string2, ss_length=3, gap_weight=0.5,
+                                   full=True)
