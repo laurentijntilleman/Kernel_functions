@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on: Fri Oct 30 2015
-Last update: Tue Nov 2 2015
-
+Last update: Tue Nov 10 2015
 @author: Michiel Stock
 michielfmstock@gmail.com
-
 An implementation of the gap weighted subsequence kernel,
 makes use of numba's Just In Time compilation. On the benchmark this is
 about 250 times faster than the naive implementation
+Python 3.5 version
 """
 
 import numpy as np
 import numba
+import functools
 
 @numba.jit(nopython=True)
 def dyn_gap_weighted_subseq(seq1, seq2, DPS, DP, kernel_values, ss_length,
@@ -22,13 +22,13 @@ def dyn_gap_weighted_subseq(seq1, seq2, DPS, DP, kernel_values, ss_length,
     """
     length1 = len(seq1)
     length2 = len(seq2)
-    for i in xrange(length1):
-        for j in xrange(length2):
+    for i in range(length1):
+        for j in range(length2):
             if seq1[i] == seq2[j]:
                 DPS[i, j] = gap_weight**2
-    for l in xrange(1, ss_length):
-        for i in xrange(length1):
-            for j in xrange(length2):
+    for l in range(1, ss_length):
+        for i in range(length1):
+            for j in range(length2):
                 DP[i+1, j+1] = DPS[i, j] + gap_weight * DP[i, j+1] +\
                     gap_weight * DP[i+1, j] - gap_weight** 2* DP[i, j]
                 if seq1[i] == seq2[j]:
@@ -63,8 +63,8 @@ def gap_weighted_subsequence(sequence1, sequence2, ss_length, gap_weight,
     # sequences to integers
     length1 = len(sequence1)
     length2 = len(sequence2)
-    seq1_array = np.array(map(lambda c : alphabet_dict[c], sequence1))
-    seq2_array = np.array(map(lambda c : alphabet_dict[c], sequence2))
+    seq1_array = np.array(list(map(lambda c : alphabet_dict[c], sequence1)))
+    seq2_array = np.array(list(map(lambda c : alphabet_dict[c], sequence2)))
 
     # make dynamic prog matrices
     DPS = np.zeros((length1, length2))
@@ -107,14 +107,14 @@ def gap_weighted_subsequence_Gram(sequences, ss_length, gap_weight,
     """
     # initialize the alphabet
     if alphabet is None:
-        alphabet = reduce(lambda x, y : x | y, map(set, sequences), set([]))
+        alphabet = functools.reduce(lambda x, y : x | y, list(map(set, sequences)), set([]))
     alphabet_dict = {char : i for i, char in enumerate(alphabet)}
 
     # sequences to integers
     char_to_int = lambda char : alphabet_dict[char]
-    sequences_array = [np.array(map(char_to_int, seq)) for seq in sequences]
+    sequences_array = [np.array(list(map(char_to_int, seq))) for seq in sequences]
     if test_sequences is not None:
-        sequences_array_test = [np.array(map(char_to_int, seq)) for seq\
+        sequences_array_test = [np.array(list(map(char_to_int, seq))) for seq\
                                 in test_sequences]
     
     kernel_values = np.zeros(ss_length)
@@ -124,8 +124,8 @@ def gap_weighted_subsequence_Gram(sequences, ss_length, gap_weight,
             gram = np.zeros((len(sequences), len(sequences)))
         else:
             gram = np.zeros((len(sequences), len(sequences), ss_length))
-        for i in xrange(len(sequences)):
-            for j in xrange(i, len(sequences)):
+        for i in range(len(sequences)):
+            for j in range(i, len(sequences)):
                 length1 = len(sequences[i])
                 length2 = len(sequences[j])
                 DPS = np.zeros((length1, length2))
@@ -148,8 +148,8 @@ def gap_weighted_subsequence_Gram(sequences, ss_length, gap_weight,
             gram = np.zeros((len(sequences), len(test_sequences)))
         else:
             gram = np.zeros((len(sequences), len(test_sequences), ss_length))
-        for i in xrange(len(sequences)):
-            for j in xrange((len(test_sequences))):
+        for i in range(len(sequences)):
+            for j in range((len(test_sequences))):
                 length1 = len(sequences[i])
                 length2 = len(test_sequences[j])
                 DPS = np.zeros((length1, length2))
@@ -178,5 +178,5 @@ if __name__ == '__main__':
     alphabet = set(string1) | set(string2)
 
     
-    print gap_weighted_subsequence(string1, string2, ss_length=3, gap_weight=0.5,
-                                   full=True)
+    print(gap_weighted_subsequence(string1, string2, ss_length=3, gap_weight=0.5,
+                                   full=True))
