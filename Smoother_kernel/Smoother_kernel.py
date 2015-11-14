@@ -1,19 +1,15 @@
 '''
 Created on Fri Aug 28 2015
 Last update: Mon Aug 28 2015
-
 @author: Michiel Stock
 michielfmstock@gmail.com
-
+Version: Python 3.5
 Implementation of a smooting kernel:
-
     $$
     K(x, x') = \alpha + (1-\alpha)\delta(x, x')
     $$
-
 This kernel can be used as an uninformative task-kernel: it only smooths
 the tasks such that their output is more similar.
-
 The gram matrix is a weighted sum of an identity matrix and an all-one matrix.
 It is easy to show that for ridge regression, the Gram matrix is just a weighted
 '''
@@ -81,12 +77,12 @@ if __name__ == '__main__':
 
 
     gram = generate_smoothing_Gram(n_instances, alpha)
-    print gram
+    print(gram)
 
     hat = generate_smoothing_hat(n_instances, alpha, reg)
-    print hat
-    print 'Check if hat matrix is correct:'
-    print np.allclose(hat, np.linalg.inv(gram + np.eye(n_instances) * reg).dot(gram))
-    print 'Check if predictions are correct:'
+    print(hat)
+    print('Check if hat matrix is correct:')
+    print(np.allclose(hat, np.linalg.inv(gram + np.eye(n_instances) * reg).dot(gram)))
+    print('Check if predictions are correct:')
     Y = np.random.rand(50, n_instances)
-    print np.allclose(Y.dot(hat), smooth_predictions(Y, alpha, reg))
+    print(np.allclose(Y.dot(hat), smooth_predictions(Y, alpha, reg)))
